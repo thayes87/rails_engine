@@ -13,6 +13,11 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemSerializer.new(item), status: 201
   end
 
+  def update
+    item = Item.update(params[:id], item_params)
+    render json: ItemSerializer.new(item)  
+  end
+
   private
 
   def item_params
