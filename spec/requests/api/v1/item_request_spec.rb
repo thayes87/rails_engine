@@ -77,14 +77,14 @@ describe "Items API" do
     end
 
     it "can update an existing item" do
-      id = create(:item).id
-      previous_price = Item.last.unit_price
-      item_params = { unit_price: 78.99 }
+      item = create(:item)
+      previous_price = item.unit_price
+      item_params = { unit_price: 78.99, merchant_id: item.merchant_id }
       
       headers = {"CONTENT_TYPE" => "application/json"}
     
-      patch "/api/v1/items/#{id}", headers: headers, params: JSON.generate({item: item_params})
-      item = Item.find_by(id: id)
+      patch "/api/v1/items/#{item.id}", headers: headers, params: JSON.generate({item: item_params})
+      item = Item.find_by(id: item.id)
     
       expect(response).to be_successful
       expect(item.unit_price).to_not eq(previous_price)
