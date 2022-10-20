@@ -5,11 +5,11 @@ class Api::V1::Items::SearchController < ApplicationController
     if item_params[:name].present?
       item = Item.where('name ILIKE ?', "%#{item_params[:name]}%").order(:name).first
     elsif item_params[:min_price].present? && item_params[:max_price].present?
-      item = Item.where('unit_price >= ? and unit_price <= ?', item_params[:min_price], item_params[:max_price]).order('LOWER(name)').first
+      item = Item.where('unit_price >= ? and unit_price <= ?', item_params[:min_price], item_params[:max_price]).order(Arel.sql('lower(name)')).first
     elsif item_params[:min_price].present?
-      item = Item.where('unit_price >= ?', item_params[:min_price]).order('LOWER(name)').first
+      item = Item.where('unit_price >= ?', item_params[:min_price]).order(Arel.sql('lower(name)')).first
     elsif item_params[:max_price].present?
-      item = Item.where('unit_price <= ?', item_params[:max_price]).order('LOWER(name)').first
+      item = Item.where('unit_price <= ?', item_params[:max_price]).order(Arel.sql('lower(name)')).first
     end
 
     if item.blank?

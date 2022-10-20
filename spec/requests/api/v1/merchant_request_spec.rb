@@ -23,6 +23,41 @@ describe "Merchants API" do
       end
     end
 
+    it "can find all merchants that match a search term" do
+      merchant1 = create(:merchant, name: "Wal-Mart")
+      merchant2 = create(:merchant, name: "K-Mart")
+      merchant3 = create(:merchant, name: "Target")
+
+      search_criteria = "mart"
+      get "/api/v1/merchants/find_all?name=#{search_criteria}"
+
+      merchants = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+
+      expect(merchants[:data].first[:id]).to eq("#{merchant2.id}")
+      expect(merchants[:data].last[:id]).to eq("#{merchant1.id}")
+
+      expect(merchants[:data].first[:attributes][:name]).to eq(merchant2.name)
+      expect(merchants[:data].last[:attributes][:name]).to eq(merchant1.name)
+    end
+
+    it 'can return and empty array when no merchant matches the search criteria' do
+      merchant1 = create(:merchant, name: "Wal-Mart")
+      merchant2 = create(:merchant, name: "K-Mart")
+      merchant3 = create(:merchant, name: "Target")
+
+      search_criteria = "Kroger"
+      get "/api/v1/merchants/find_all?name=#{search_criteria}"
+
+      merchant = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to be_successful
+      expect(merchant[:data]).to eq([])
+    end
+  end
+  
+  context "POST /api/v1/merchants" do
     it "can get a merchant by its id" do
       id = create(:merchant).id
     

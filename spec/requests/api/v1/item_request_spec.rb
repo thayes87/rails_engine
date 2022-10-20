@@ -123,11 +123,11 @@ describe "Items API" do
       item = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to be_successful
-      expect(item[:data].first[:id]).to eq("#{item1.id}")
-      expect(item[:data].first[:attributes][:name]).to eq(item1.name)
-      expect(item[:data].first[:attributes][:description]).to eq(item1.description)
-      expect(item[:data].first[:attributes][:unit_price]).to eq(item1.unit_price)
-      expect(item[:data].first[:attributes][:merchant_id]).to eq(item1.merchant_id)
+      expect(item[:data][:id]).to eq("#{item1.id}")
+      expect(item[:data][:attributes][:name]).to eq(item1.name)
+      expect(item[:data][:attributes][:description]).to eq(item1.description)
+      expect(item[:data][:attributes][:unit_price]).to eq(item1.unit_price)
+      expect(item[:data][:attributes][:merchant_id]).to eq(item1.merchant_id)
     end
 
     it 'allows the user to send one maximum and one minimum price-related query parameters' do
