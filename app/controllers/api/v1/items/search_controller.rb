@@ -3,13 +3,13 @@ class Api::V1::Items::SearchController < ApplicationController
   
   def show
     if item_params[:name].present?
-      item = Item.find_by_name(item_params)
+      item = Item.find_by_name(item_params[:name])
     elsif item_params[:min_price].present? && item_params[:max_price].present?
-      item = Item.find_by_min_max(item_params)
+      item = Item.find_by_min_max(item_params[:min_price], item_params[:max_price])
     elsif item_params[:min_price].present?
-      item = Item.find_by_min(item_params)
+      item = Item.find_by_min(item_params[:min_price])
     elsif item_params[:max_price].present?
-      item = Item.find_by_max(item_params)
+      item = Item.find_by_max(item_params[:max_price])
     end
 
     if item.blank?

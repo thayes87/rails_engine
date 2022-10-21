@@ -1,6 +1,6 @@
 class Api::V1::Merchants::SearchController < ApplicationController
   def show
-    merchants = Merchant.find_merchant_by_name(merchant_params)
+    merchants = Merchant.find_merchant_by_name(merchant_params[:name])
     if merchants.blank?
       render json: MerchantSerializer.no_result
     else

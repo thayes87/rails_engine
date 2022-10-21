@@ -15,7 +15,6 @@ class Api::V1::ItemsController < ApplicationController
 
   def update
     merchant = Merchant.find_by(id: item_params[:merchant_id])
-    #get rid of 18, make 20 into class method "if Merchant.valid_merchant?(item_params[:merchant_id])"
     if merchant.present? || item_params[:merchant_id].nil?
       updated_item = Item.update(params[:id], item_params)
       render json: ItemSerializer.new(updated_item) 
