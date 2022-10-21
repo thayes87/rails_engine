@@ -171,6 +171,16 @@ describe "Items API" do
 
       expect(response).to have_http_status(400)
     end
+
+    it 'returns an error message of 400 if a "name" param and "min" or "max" param is also passed' do
+      item1 = create(:item, name: "Turing", unit_price: 51.00)
+      item2 = create(:item, name: "Ring World", unit_price: 4.99)
+
+      get "/api/v1/items/find?name=ring&min_price=50"
+
+      item = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to have_http_status(400)
+    end
   end
 
   context "POST /api/v1/items" do

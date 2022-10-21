@@ -14,7 +14,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    item = Item.find(params[:id])
     merchant = Merchant.find_by(id: item_params[:merchant_id])
     #get rid of 18, make 20 into class method "if Merchant.valid_merchant?(item_params[:merchant_id])"
     if merchant.present? || item_params[:merchant_id].nil?

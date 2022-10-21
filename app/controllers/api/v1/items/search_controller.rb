@@ -20,14 +20,13 @@ class Api::V1::Items::SearchController < ApplicationController
   end
 
 private
-
   def item_params
     params.permit(:name, :description, :min_price, :max_price)
   end
 
   def qualify_params
-    if item_params[:name] && (item_params[:min_price] || item_params[:max_price])
-      render status: 400
+    if item_params[:name].present? && (item_params[:min_price].present? || item_params[:max_price].present?)
+      render json: {"error": "Undefined Search" },status: 400
     end
   end
 
