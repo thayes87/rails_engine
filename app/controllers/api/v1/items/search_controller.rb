@@ -3,13 +3,13 @@ class Api::V1::Items::SearchController < ApplicationController
   
   def show
     if item_params[:name].present?
-      item = Item.where('name ILIKE ?', "%#{item_params[:name]}%").order(:name).first
+      item = Item.find_by_name(item_params)
     elsif item_params[:min_price].present? && item_params[:max_price].present?
-      item = Item.where('unit_price >= ? and unit_price <= ?', item_params[:min_price], item_params[:max_price]).order(Arel.sql('lower(name)')).first
+      item = Item.find_by_min_max(item_params)
     elsif item_params[:min_price].present?
-      item = Item.where('unit_price >= ?', item_params[:min_price]).order(Arel.sql('lower(name)')).first
+      item = Item.find_by_min(item_params)
     elsif item_params[:max_price].present?
-      item = Item.where('unit_price <= ?', item_params[:max_price]).order(Arel.sql('lower(name)')).first
+      item = Item.find_by_max(item_params)
     end
 
     if item.blank?
@@ -19,29 +19,27 @@ class Api::V1::Items::SearchController < ApplicationController
     end
   end
 
-  private
+private
 
   def item_params
     params.permit(:name, :description, :min_price, :max_price)
   end
 
   def qualify_params
-    if item_params[:name] && item_params[:min_price]
-      render status: 400
-    elsif item_params[:name] && item_params[:max_price]
+    if item_params[:name] && (item_params[:min_price] || item_params[:max_price])
       render status: 400
     end
   end
 
   def confirm_min
     if item_params[:min_price].to_f.negative?
-      render json: {"error": "Min must be positive" }, status: 400
+      render json: {"error": "Number must be positive" }, status: 400
     end
   end
 
   def confirm_max
     if item_params[:max_price].to_f.negative?
-      render json: {"error": "Max must be positive" }, status: 400
+      render json: {"error": "Number must be positive" }, status: 400
     end
   end
 end

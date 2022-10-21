@@ -139,13 +139,37 @@ describe "Items API" do
       get "/api/v1/items/find?max_price=150&min_price=50"
       
       item = JSON.parse(response.body, symbolize_names: true)
-# require 'pry'; binding.pry
+
       expect(response).to be_successful
       expect(item[:data][:id]).to eq("#{item3.id}")
       expect(item[:data][:attributes][:name]).to eq(item3.name)
       expect(item[:data][:attributes][:description]).to eq(item3.description)
       expect(item[:data][:attributes][:unit_price]).to eq(item3.unit_price)
       expect(item[:data][:attributes][:merchant_id]).to eq(item3.merchant_id)
+    end
+
+    it 'returns an error message of 400 if the minimum price is a negative' do
+      item1 = create(:item, name: "Turing", unit_price: 51.00)
+      item2 = create(:item, name: "Ring World", unit_price: 4.99)
+
+      search_criteria = -1
+      get "/api/v1/items/find?min_price=#{search_criteria}"
+      
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to have_http_status(400)
+    end
+
+    it 'returns an error message of 400 if the maximum price is a negative' do
+      item1 = create(:item, name: "Turing", unit_price: 51.00)
+      item2 = create(:item, name: "Ring World", unit_price: 4.99)
+
+      search_criteria = -1
+      get "/api/v1/items/find?max_price=#{search_criteria}"
+      
+      item = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to have_http_status(400)
     end
   end
 
