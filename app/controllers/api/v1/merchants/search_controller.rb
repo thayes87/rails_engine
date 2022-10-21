@@ -1,6 +1,6 @@
 class Api::V1::Merchants::SearchController < ApplicationController
   def show
-    merchants = Merchant.where('name ILIKE ?', "%#{merchant_params[:name]}%").order(:name)
+    merchants = Merchant.find_merchant_by_name(merchant_params)
     if merchants.blank?
       render json: MerchantSerializer.no_result
     else
@@ -8,7 +8,7 @@ class Api::V1::Merchants::SearchController < ApplicationController
     end
   end
 
-  private 
+private 
 
   def merchant_params
     params.permit(:name)
